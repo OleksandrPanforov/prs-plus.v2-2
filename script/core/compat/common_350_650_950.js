@@ -6,7 +6,7 @@
 //
 // Receives PARAMS argument with the following fields:: 
 //		Core, model, bootLog, loadCore, loadAddons, getFileContent, compatPath,
-//		langNodeIndex, keyboardNodeIndex
+//		langNodeIndex, keyboardNodeIndex, compatibility
 //	optional parameters:
 //		fixTimeZones 
 //
@@ -46,8 +46,13 @@ tmp = function () {
 		var requiredFunctions, i, n;
 		if (!params || !params.Core || !params.Core.config ||
 				typeof params.model !== "string" ||
+				params.Core.config.model !== params.model ||
 				typeof params.compatPath !== "string" ||
-				typeof params.bootLog !== "function") {
+				typeof params.bootLog !== "function" ||
+				!params.compatibility ||
+				params.compatibility.model !== params.model ||
+				params.compatibility.langNodeIndex !== params.langNodeIndex ||
+				params.compatibility.keyboardNodeIndex !== params.keyboardNodeIndex) {
 			return false;
 		}
 		requiredFunctions = ["loadCore", "loadAddons", "getFileContent"];
@@ -492,27 +497,27 @@ tmp = function () {
 	};
 
 
+	var keyboardPaths = {
+		"English-US": "KeyboardLayout103P.xml",
+		"English-UK": "KeyboardLayout166.xml",
+		"French-France": "KeyboardLayout189.xml",
+		"French-Canada": "KeyboardLayout445.xml",
+		"German-Germany": "KeyboardLayout129.xml",
+		"Dutch-Netherlands": "KeyboardLayout143.xml",
+		// This spelling matches the value used by Sony's firmware.
+		"Sapanish-Spain": "KeyboardLayout173.xml",
+		"Italian-Italy": "KeyboardLayout142.xml",
+		"Polish": "languages/KeyboardLayoutPolish.xml",
+		"Portuguese-Portugal": "KeyboardLayout275.xml",
+		"Russian": "languages/KeyboardLayoutRussian.xml",
+		"Russian-Phonetic": "languages/KeyboardLayoutRussianPhonetic.xml",
+		"Georgian": "languages/KeyboardLayoutGeorgian.xml"
+	};
+
 	oldChangeKeyboardType = Fskin.kbookKeyboard.keyboardLayout.changeKeyboardType;
 	Fskin.kbookKeyboard.keyboardLayout.changeKeyboardType = function (langType) {
-		var url, path, keyboardPaths, keyboardPath;
+		var url, path, keyboardPath;
 		try {
-			keyboardPaths = {
-				"English-US": "KeyboardLayout103P.xml",
-				"English-UK": "KeyboardLayout166.xml",
-				"French-France": "KeyboardLayout189.xml",
-				"French-Canada": "KeyboardLayout445.xml",
-				"German-Germany": "KeyboardLayout129.xml",
-				"Dutch-Netherlands": "KeyboardLayout143.xml",
-				// yeah, that's what's written in Sony's firmware, Sapanish
-				"Sapanish-Spain": "KeyboardLayout173.xml", 
-				"Italian-Italy": "KeyboardLayout142.xml",
-				"Polish": "languages/KeyboardLayoutPolish.xml",
-				"Portuguese-Portugal": "KeyboardLayout275.xml",
-				"Russian": "languages/KeyboardLayoutRussian.xml",
-				"Russian-Phonetic": "languages/KeyboardLayoutRussianPhonetic.xml",
-				"Georgian": "languages/KeyboardLayoutGeorgian.xml"
-			};
-			
 			keyboardPath = keyboardPaths[langType]; 
 			if (keyboardPath !== undefined) {
 				path = System.applyEnvironment('[keyboardLayoutPath]') ;

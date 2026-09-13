@@ -193,7 +193,7 @@ try {
 		
 		if (duration > 0) {
 			try {
-				Core.shell.exec("sleep " + duration);
+				Core.shell.sleep(duration);
 				if (kbook.model.currentNode && kbook.model.currentNode.name === "About") {
 					// Crashes in about screen on 650,? if only part of it is invalidated FIXME: figure why
 					win.invalidate();

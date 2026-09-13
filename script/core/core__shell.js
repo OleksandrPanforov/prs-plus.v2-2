@@ -74,6 +74,13 @@ try {
 				throw "Failed to execute " + cmd + ", exit code: " + result;
 			}
 		};
+
+		Core.shell.sleep = function (seconds) {
+			if (typeof seconds !== "number" || seconds < 0 || seconds !== Math.floor(seconds)) {
+				throw "Invalid sleep duration";
+			}
+			this.exec("sleep " + seconds);
+		};
 		
 		// Mounts SD or MS card
 		// Arguments:
