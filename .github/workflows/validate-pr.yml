@@ -1,0 +1,62 @@
+name: Validate PR
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: PRS-650 validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Apache Ant
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y ant
+
+      - name: Validate repository whitespace
+        run: git diff --check
+
+      - name: Validate JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(git ls-files -z -- '*.js')
+
+      - name: Build PRS-650 package
+        working-directory: build
+        run: ant -f build.xml buildAll
+
+      - name: Clean generated build output
+        if: always()
+        shell: bash
+        run: |
+          rm -rf build/tmp build/dist
+          find script/core/lang -maxdepth 1 -type f -name '*.js' -delete
