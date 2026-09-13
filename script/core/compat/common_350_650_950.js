@@ -5,7 +5,8 @@
 //	Keyboard popup chars code discovered and harnessed by Mark Nord
 //
 // Receives PARAMS argument with the following fields:: 
-//		Core, bootLog, loadCore, loadAddons, getFileContent, compatPath, langNodeIndex, keyboardNodeIndex
+//		Core, model, bootLog, loadCore, loadAddons, getFileContent, compatPath,
+//		langNodeIndex, keyboardNodeIndex
 //	optional parameters:
 //		fixTimeZones 
 //
@@ -39,19 +40,44 @@
 tmp = function () {
 	var localizeKeyboardPopups, updateSiblings, localize, localizeKeyboard, oldSetLocale, 
 		oldChangeKeyboardType, oldReadPreference, oldCallback, makeRootNodesMovable, bootLog,
-		doGetPeriodicalsKind;
+		doGetPeriodicalsKind, validateParams;
 	bootLog = PARAMS.bootLog;
+	validateParams = function (params) {
+		var requiredFunctions, i, n;
+		if (!params || !params.Core || !params.Core.config ||
+				typeof params.model !== "string" ||
+				typeof params.compatPath !== "string" ||
+				typeof params.bootLog !== "function") {
+			return false;
+		}
+		requiredFunctions = ["loadCore", "loadAddons", "getFileContent"];
+		for (i = 0, n = requiredFunctions.length; i < n; i++) {
+			if (typeof params[requiredFunctions[i]] !== "function") {
+				return false;
+			}
+		}
+		return typeof params.langNodeIndex === "number" &&
+			typeof params.keyboardNodeIndex === "number";
+	};
+	if (!validateParams(PARAMS)) {
+		if (typeof bootLog === "function") {
+			bootLog("Invalid compatibility parameters for model " +
+				(PARAMS && PARAMS.model ? PARAMS.model : "unknown"));
+		}
+		return;
+	}
 
 	// Standby image
 	var orgOrientation = 0;
 
 	var oldStandbyImageDraw = standbyImage.draw;
 	standbyImage.draw = function () {
-		var window, ditheredBitmap, x, y, bounds, ratio, width, height;
-		var newpath, newbitmap, mode, dither, oldTextStyle, oldTextSize, oldPenColor, L;
+		var window, displayBitmap, newbitmap, coverRendered, x, y, bounds, ratio, width, height;
+		var newpath, mode, dither, oldTextStyle, oldTextSize, oldPenColor, L;
 		window = this.root.window;
 		mode = Core.addonByName.StandbyImage.options.mode;
 		dither = Core.addonByName.StandbyImage.options.dither === "true";
+		coverRendered = false;
 		if (mode === 'cover') {
 			try {
 				// attempt to use current book cover
@@ -77,16 +103,30 @@ tmp = function () {
 						width = this.width;
 						height = this.height;
 				}
-				ditheredBitmap = newbitmap.dither(dither);
-				newbitmap.close();
-				if (ditheredBitmap) {
-					window.drawBitmap(ditheredBitmap, x, y, width, height);
-					ditheredBitmap.close();
+				if (dither) {
+					displayBitmap = newbitmap.dither(true);
+					newbitmap.close();
+					newbitmap = null;
+				} else {
+					displayBitmap = newbitmap;
+					newbitmap = null;
+				}
+				if (displayBitmap) {
+					window.drawBitmap(displayBitmap, x, y, width, height);
+					displayBitmap.close();
+					displayBitmap = null;
+					coverRendered = true;
 				}
 			} catch (ignore) {
+				if (displayBitmap) {
+					displayBitmap.close();
+				}
+				if (newbitmap) {
+					newbitmap.close();
+				}
 			}
 		}
-		if  (!newbitmap && mode !== 'act_page') {
+		if  (!coverRendered && mode !== 'act_page') {
 			oldStandbyImageDraw.apply(this);
 		} else if (mode === 'act_page')  {
 			L = Core.lang.getLocalizer("StandbyImage");

@@ -10,7 +10,7 @@
 
 if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 	var bootLog;
-	var path, code, f, endsWith, listFiles, getFileContent, getFileContentEx, userConfig, Core, loadCore, loadAddons, compatPath;
+	var path, code, f, endsWith, isSafePath, listFiles, getFileContent, getFileContentEx, userConfig, Core, loadCore, loadAddons, compatPath;
 	var tmp = function() {
 		var config = {
 			model: System.applyEnvironment("[prspModel]"),
@@ -48,12 +48,32 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 		endsWith = function(str, postfix) {
 			return str.lastIndexOf(postfix) === str.length - postfix.length;
 		};
+
+		// Reject unsafe paths before attempting file access.
+		// This reduces the risk of traversal and malformed config paths while staying compatible
+		// with the reader's valid absolute paths.
+		isSafePath = function(path) {
+			if (typeof path !== "string" || path.length === 0) {
+				return false;
+			}
+			if (path.indexOf("..") !== -1 || path.indexOf("\\0") !== -1 || path.indexOf("\0") !== -1) {
+				return false;
+			}
+			if (path.indexOf(";") !== -1) {
+				return false;
+			}
+			return true;
+		};
 		
 		// Returns array of files with given extension sorted by name
 		//
 		listFiles = function(path, ext) {
 			var iterator, items, item, p;
 			items = [];
+			if (!isSafePath(path)) {
+				bootLog("Rejected unsafe directory path: " + path);
+				return items;
+			}
 			try {
 				iterator = new FileSystem.Iterator(path);
 				try {
@@ -79,6 +99,10 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 		//
 		getFileContent = function(path) {
 			var f, result;
+			if (!isSafePath(path)) {
+				bootLog("Rejected unsafe file path: " + path);
+				return "";
+			}
 			try {
 				f = new Stream.File(path, 2);
 				try {
@@ -96,15 +120,19 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 		// Loads file, or, if path points to a folder, combined content of the files in folder, with extention <ext>
 		//
 		getFileContentEx = function(path, ext) {
-			var info, files, result, i, n;
+			var info, files, chunks, i, n;
+			if (!isSafePath(path)) {
+				bootLog("Rejected unsafe file collection path: " + path);
+				return "";
+			}
 			info = FileSystem.getFileInfo(path);
 			if (info && info.type == "directory") {
 				files = listFiles(path, ext);
-				result = "";
+				chunks = [];
 				for (i = 0, n = files.length; i < n; i++) {
-					result = result + getFileContent(path + files[i]);
+					chunks.push(getFileContent(path + files[i]));
 				}
-				return result;
+				return chunks.join("");
 			} 
 			return getFileContent(path);
 		};
@@ -182,6 +210,7 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 			f({
 				bootLog: bootLog,
 				Core: Core,
+				model: Core.config.model,
 				loadCore: loadCore, 
 				loadAddons: loadAddons, 
 				getFileContent: getFileContent, 
