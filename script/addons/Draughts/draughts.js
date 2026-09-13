@@ -2008,7 +2008,19 @@ var tmp = function () {
 		if ((n&&w) && (i>0) && (j>0)) nw = board[i-1][j-1]; else nw = null;
 		if (s&&e) se = board[i+1][j+1]; else se = null;
 		if ((s&&w) && (i>0)) sw = board[i-1][j+1]; else sw = null;
-		eval(((to.y-from.y != 1)?"s":"n")+((to.x-from.x != 1)?"e":"w")+"=0;");
+		if (to.y - from.y != 1) {
+			if (to.x - from.x != 1) {
+				se = 0;
+			} else {
+				sw = 0;
+			}
+		} else {
+			if (to.x - from.x != 1) {
+				ne = 0;
+			} else {
+				nw = 0;
+			}
+		}
 		if ((sw==0) && (ne==1.1)) return false;
 		if ((se==0) && (nw==1.1)) return false;
 		if ((nw==0) && (this.integ(se)==1)) return false;

@@ -23,28 +23,26 @@ try {
 			endsWith = Core.text.endsWith;
 			items = [];
 			try {
-				if (FileSystem.getFileInfo(path)) {
-					iterator = new FileSystem.Iterator(path);
-					try {
-						while (item = iterator.getNext()) {
-							if (item.type == "file") {
-								p = item.path;
-								if (arguments.length > 1) {
-									for (i = 1, n = arguments.length; i < n; i++) {
-										if (endsWith(p, arguments[i])) {
-											items.push(p);
-											break;
-										}
+				iterator = new FileSystem.Iterator(path);
+				try {
+					while (item = iterator.getNext()) {
+						if (item.type == "file") {
+							p = item.path;
+							if (arguments.length > 1) {
+								for (i = 1, n = arguments.length; i < n; i++) {
+									if (endsWith(p, arguments[i])) {
+										items.push(p);
+										break;
 									}
-								} else {
-									items.push(p);
 								}
+							} else {
+								items.push(p);
 							}
 						}
-						items.sort();
-					} finally {
-						iterator.close();
 					}
+					items.sort();
+				} finally {
+					iterator.close();
 				}
 			} catch (e) {
 				log.error("Error in list files, listing folder " + path, e);

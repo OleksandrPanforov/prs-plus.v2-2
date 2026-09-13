@@ -341,20 +341,19 @@ tmp = function() {
 					nodes.push(node);
 				}
 				
-				if (FileSystem.getFileInfo(path)) {
-					// Iterate over item's content
-					iterator = new FileSystem.Iterator(path);
-					while (item = iterator.getNext()) {
-						if (item.type === "directory") {
-							factory = createFolderNode;
-						} else {
-							factory = createMediaNode;
-						}
-						
-						node = factory(path + item.path, item.path, this, undefined, this.needsMount);
-						if (node !== null) {
-							nodes.push(node);
-						}
+				// Iterate over item's content. Iterator creation reports missing paths
+				// through the surrounding error handler, so avoid a redundant stat call.
+				iterator = new FileSystem.Iterator(path);
+				while (item = iterator.getNext()) {
+					if (item.type === "directory") {
+						factory = createFolderNode;
+					} else {
+						factory = createMediaNode;
+					}
+					
+					node = factory(path + item.path, item.path, this, undefined, this.needsMount);
+					if (node !== null) {
+						nodes.push(node);
 					}
 				}
 			} finally {
@@ -415,7 +414,7 @@ tmp = function() {
 	// Constructs "Browse Folders" node
 	folderRootConstruct = function() {
 		try {
-			var i,n, nodes, roots, rootTitles, rootIcons, nNodes, idx;
+			var i,n, nodes, roots, rootTitles, rootIcons, availableRoots, nNodes, idx;
 			nodes = [];
 			roots = [];
 			rootTitles = [];
@@ -439,10 +438,13 @@ tmp = function() {
 				];
 			}
 			
-			// Number of nodes created
+			// Probe each storage root once; SD/MS availability can change between
+			// visits, so this remains scoped to the current root construction.
+			availableRoots = [];
 			nNodes = 0;
 			for (i = 0, n = roots.length; i < n; i++) {
 				if (FileSystem.getFileInfo(roots[i] + "/")) {
+					availableRoots[i] = true;
 					idx = i;
 					nNodes++;
 				}
@@ -454,7 +456,7 @@ tmp = function() {
 				return;
 			} else {
 				for (i = 0, n = roots.length; i < n; i++) {
-					if (FileSystem.getFileInfo(roots[i] + "/")) {
+					if (availableRoots[i]) {
 						nodes.push(createFolderNode(roots[i], rootTitles[i], this, rootIcons[i]));
 					}
 				}
