@@ -22,5 +22,7 @@ config.coreFile = "/Data/Beta/core/";
 config.defaultLogLevel = "trace";
 // where to log
 config.logFile = "/Data/prsp_script.log";
+// enable startup timing diagnostics in the log when troubleshooting
+config.startupDiagnostics = true;
 // where to save settings
 config.settingsPath = "/Data/Beta/settings/";

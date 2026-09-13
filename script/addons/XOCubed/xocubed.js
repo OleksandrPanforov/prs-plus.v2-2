@@ -976,7 +976,7 @@ var tmp = function () {
 						if (!isTouch) {
 							this.grid1Cursor.show(false);
 						}
-						FskUI.Window.update.call(kbook.model.container.getWindow());
+						Core.ui.updateScreen("XOCubed");
 						id = target.placeO();
 						this[id].u = 2;
 											
@@ -1200,7 +1200,7 @@ var tmp = function () {
 			if (!isTouch) {
 				this.grid1Cursor.show(false);
 			}
-			FskUI.Window.update.call(kbook.model.container.getWindow());
+			Core.ui.updateScreen("XOCubed");
 			id = target.placeO();
 			this[id].u = 2;
 			this.showTurn.setValue("Your turn...");

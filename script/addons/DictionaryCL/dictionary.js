@@ -120,7 +120,7 @@ var tmp = function () {
 			if (show) {
 				// Force screen update 
 				if (!simEnviro) {
-					FskUI.Window.update.call(kbook.model.container.getWindow());
+					Core.ui.updateScreen("DictionaryCL");
 				}
 			}
 		};

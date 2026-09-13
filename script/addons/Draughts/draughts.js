@@ -343,7 +343,7 @@ var tmp = function () {
 					if (!game_is_over) {
 						this.messageStatus.setValue("Black's turn");
 						if (auto_mode) {
-							FskUI.Window.update.call(kbook.model.container.getWindow());
+							Core.ui.updateScreen("Draughts");
 							this.autoMove();
 						}
 					}
@@ -402,7 +402,7 @@ var tmp = function () {
 							if (!game_is_over) {
 								this.messageStatus.setValue("Black's turn");
 								if (auto_mode) {
-									FskUI.Window.update.call(kbook.model.container.getWindow());
+									Core.ui.updateScreen("Draughts");
 									this.autoMove();
 								}
 							}
@@ -461,7 +461,7 @@ var tmp = function () {
 								if (!game_is_over) {
 									this.messageStatus.setValue("Black's turn");
 									if (auto_mode) {
-										FskUI.Window.update.call(kbook.model.container.getWindow());
+										Core.ui.updateScreen("Draughts");
 										this.autoMove();
 									}
 								}							
@@ -535,7 +535,7 @@ var tmp = function () {
 								if (!game_is_over) {
 									this.messageStatus.setValue("Black's turn");
 									if (auto_mode) {
-										FskUI.Window.update.call(kbook.model.container.getWindow());
+										Core.ui.updateScreen("Draughts");
 										this.autoMove();
 									}
 								}							
@@ -564,7 +564,7 @@ var tmp = function () {
 							if (!game_is_over) {
 								this.messageStatus.setValue("Black's turn");
 								if (auto_mode) {
-									FskUI.Window.update.call(kbook.model.container.getWindow());
+									Core.ui.updateScreen("Draughts");
 									this.autoMove();
 								}
 							}
@@ -589,7 +589,7 @@ var tmp = function () {
 							if (!game_is_over) {
 								this.messageStatus.setValue("Black's turn");
 								if (auto_mode) {
-									FskUI.Window.update.call(kbook.model.container.getWindow());
+									Core.ui.updateScreen("Draughts");
 									this.autoMove();
 								}
 							}
@@ -654,7 +654,7 @@ var tmp = function () {
 								if (!game_is_over) {
 									this.messageStatus.setValue("Black's turn");
 									if (auto_mode) {
-										FskUI.Window.update.call(kbook.model.container.getWindow());
+										Core.ui.updateScreen("Draughts");
 										this.autoMove();
 									}
 								}							
@@ -720,7 +720,7 @@ var tmp = function () {
 								if (!game_is_over) {
 									this.messageStatus.setValue("Black's turn");
 									if (auto_mode) {
-										FskUI.Window.update.call(kbook.model.container.getWindow());
+										Core.ui.updateScreen("Draughts");
 										this.autoMove();
 									}
 								}							

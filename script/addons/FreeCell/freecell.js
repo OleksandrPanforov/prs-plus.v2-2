@@ -884,7 +884,7 @@ target.check_auto_free = function () {
         if (this.check_can_free(frees[t])==true)
         {
 	// keep checking
-			FskUI.Window.update.call(kbook.model.container.getWindow());
+			Core.ui.updateScreen("FreeCell");
             return true;
         }
     }

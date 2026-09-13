@@ -42,7 +42,7 @@
 tmp = function() {
 	var log, L, startsWith, trim, BrowseFolders, TYPE_SORT_WEIGHTS, compare, sorter, folderConstruct, 
 		createFolderNode, createMediaNode, favourites, loadFavFolders, folderRootConstruct,
-		compareFields, supportedMIMEs, createLazyInitNode, constructLazyNode, ACTION_ICON,
+		compareFields, supportedMIMEs, createLazyInitNode, constructLazyNode, getSizeComment, getSortKey, ACTION_ICON,
 		doCopyAndOpen, doCopy, doOpenHere, doGotoParent, browseFoldersNode, ENABLED, DISABLED;
 	
 	ENABLED = "enabled";
@@ -81,6 +81,24 @@ tmp = function() {
 	};
 	
 	compare = Core.config.compat.compareStrings;
+	getSortKey = function (node, field) {
+		var media, keys;
+		if (!node._sortKeys) {
+			node._sortKeys = {};
+		}
+		if (node._sortKeys[field] !== undefined) {
+			return node._sortKeys[field];
+		}
+		media = node.media || {};
+		keys = {
+			author: media.author || "",
+			titleSorter: media.titleSorter || media.title || "",
+			title: media.title || node.name || "",
+			path: media.path || node.path || node.name || ""
+		};
+		node._sortKeys[field] = keys[field] || "";
+		return node._sortKeys[field];
+	};
 	sorter = function (a, b) {
 		var compFields, i, n, result, field;
 		try {
@@ -96,7 +114,7 @@ tmp = function() {
 				// compare fields until values don't match
 				for (i = 0, n = compFields.length; i < n; i++) {
 					field = compFields[i];
-					result = compare(a.media[field], b.media[field]);
+					result = compare(getSortKey(a, field), getSortKey(b, field));
 					if (result !== 0) {
 						break;
 					}
@@ -161,17 +179,6 @@ tmp = function() {
 		node = needsMount !== undefined ? null : Core.media.createMediaNode(path, parent);
 		extension = Core.io.extractExtension(path);
 		sizeStr = "";
-		
-		// Size in comment
-		if (BrowseFolders.options.fileSizeInComment === ENABLED) {
-			size = Core.io.getFileSize(path) / 1024;
-			if (size > 1024) {
-				size /= 1024;
-				sizeStr = size.toFixed(1) + " MB";
-			} else {
-				sizeStr = size.toFixed(0) + " KB";
-			}
-		}	
 		if (node === null) {
 			// Either file that is not a media, or unscanned
 			mime = FileSystem.getMIMEType(path);
@@ -183,6 +190,9 @@ tmp = function() {
 				node = Core.convert.createMediaNode(path, title, parent, createMediaNode, needsMount);
 			}
 		} else if (BrowseFolders.options.sortMode === "filenameAsComment") {
+			if (BrowseFolders.options.fileSizeInComment === ENABLED) {
+				sizeStr = getSizeComment(path);
+			}
 			node._mycomment = function() {
 				try {
 					return Core.io.extractFileName(this.media.path) + ", " + sizeStr;
@@ -191,6 +201,7 @@ tmp = function() {
 				}
 			};
 		} else if (BrowseFolders.options.fileSizeInComment === ENABLED) {
+			sizeStr = getSizeComment(path);
 			node._mycomment = function() {
 				return this.comment + ", " + sizeStr + ", [" + extension + "]";
 			};
@@ -199,6 +210,14 @@ tmp = function() {
 			node.needsMount = needsMount;
 		}
 		return node;
+	};
+
+	getSizeComment = function (path) {
+		var size = Core.io.getFileSize(path) / 1024;
+		if (size > 1024) {
+			return (size / 1024).toFixed(1) + " MB";
+		}
+		return size.toFixed(0) + " KB";
 	};
 	
 	//-----------------------------------------------------------------------------------------------------------------------------
@@ -609,6 +628,35 @@ tmp = function() {
 		onInit: function() {
 			// Bootstrap code knows only Core, not this addon
 			Core.config.cardScanMode = BrowseFolders.options.cardScan;
+		},
+
+		// Query already-loaded media nodes without building a second library index.
+		search: function (nodes, query) {
+			var result, normalized, i, n, node, media, title, author, path;
+			result = [];
+			normalized = Core.text.trim(query || "").toLowerCase();
+			for (i = 0, n = nodes.length; i < n; i++) {
+				node = nodes[i];
+				media = node.media;
+				title = media && media.title ? media.title : "";
+				author = media && media.author ? media.author : "";
+				path = media && media.path ? media.path : (node.path || "");
+				if (normalized === "" ||
+						(title + " " + author + " " + path).toLowerCase().indexOf(normalized) !== -1) {
+					result.push(node);
+				}
+			}
+			return result;
+		},
+
+		sort: function (nodes, mode) {
+			var oldMode, result;
+			oldMode = BrowseFolders.options.sortMode;
+			BrowseFolders.options.sortMode = mode || oldMode;
+			result = nodes.slice(0);
+			result.sort(sorter);
+			BrowseFolders.options.sortMode = oldMode;
+			return result;
 		},
 		
 		actions: [{

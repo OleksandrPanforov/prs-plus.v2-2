@@ -8,12 +8,24 @@
 //
 try {
 	tmp = function() {
-		var L, fb2toepub, endsWith, createFB2Node, createImageNode, createMediaNode, enterFB2Node, FB2EPUB, STYLES_DIR, MAX_TMP_SIZE, TMP_FILE;
+		var L, fb2toepub, endsWith, createFB2Node, createImageNode, createMediaNode, enterFB2Node, FB2EPUB, STYLES_DIR, MAX_TMP_SIZE, TMP_FILE, validateOutput;
 		endsWith = Core.text.endsWith;
 		FB2EPUB = System.applyEnvironment("[prspPath]") + "fb2toepub";
 		STYLES_DIR = System.applyEnvironment("[prspPath]") + "styles";
 		MAX_TMP_SIZE = 5000000; // max size of the file that can be processed directly in mem
 		TMP_FILE = "prsp_temp_file"; // temporary file
+
+		validateOutput = function (path) {
+			var info, size;
+			info = FileSystem.getFileInfo(path);
+			if (info === null || info.type !== "file") {
+				throw "Converter did not create output: " + path;
+			}
+			size = Core.io.getFileSize(path);
+			if (size === null || size <= 0) {
+				throw "Converter created an empty output: " + path;
+			}
+		};
 		
 		fb2toepub = function (originalSrc, originalDest) {
 			var cmd, size, tmpDir, usingTemp, src, dest, mount;
@@ -63,8 +75,15 @@ try {
 			
 			try {
 				cmd = FB2EPUB + " -s " + STYLES_DIR + " \"" + src + "\" \"" + dest + "\"";
+				log.trace("fb2toepub source=" + originalSrc + " destination=" + originalDest);
 				log.trace(cmd);
-				Core.shell.exec(cmd);
+				try {
+					Core.shell.exec(cmd);
+				} catch (e) {
+					log.error("fb2toepub failed source=" + originalSrc +
+						" destination=" + originalDest + " error=" + e);
+					throw e;
+				}
 			} finally {
 				// Delete temporary source file
 				if (usingTemp) {
@@ -80,9 +99,11 @@ try {
 				}
 			}
 
+			validateOutput(dest);
 			if (usingTemp) {
 				// move temporary destinaiton file to SD/MS card
 				Core.io.moveFile(dest, originalDest);
+				validateOutput(originalDest);
 			}
 		};
 		
@@ -117,7 +138,7 @@ try {
 				}
 			} catch (e) {
 				Core.ui.showMsg(L("ERROR"), 0);
-				log.error("enterFB2Node", e);
+				log.error("enterFB2Node source=" + this.path + " error=" + e);
 			}
 		};
 		

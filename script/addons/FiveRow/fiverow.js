@@ -1938,7 +1938,7 @@ var tmp = function () {
 						if (!isTouch) {
 							this.grid1Cursor.show(false);
 						}
-						FskUI.Window.update.call(kbook.model.container.getWindow());
+						Core.ui.updateScreen("FiveRow");
 						id = target.placeO();
 						this[id].u = 2;
 											
