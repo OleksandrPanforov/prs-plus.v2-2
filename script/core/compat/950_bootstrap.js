@@ -174,10 +174,15 @@ var tmp = function() {
 	// Add option to download files
 	kbook.webviewexData.onUnsupportedMimeType = function (url, mimetype) {
 		try {
+			if (typeof url !== "string" ||
+					!/^https?:\/\/[^ \t\r\n"'`;|&<>$]+$/i.test(url)) {
+				PARAMS.bootLog("Rejected unsafe download URL");
+				return;
+			}
 			var dialog = kbook.model.getConfirmationDialog();
 			dialog.target = this;
 			dialog.onOk = function () {
-				PARAMS.Core.shell.exec("/usr/bin/wget -P /Data " + url);	
+				PARAMS.Core.shell.exec("/usr/bin/wget -P /Data \"" + url + "\"");
 			};
 			dialog.onNo = function () {
 			};
@@ -191,6 +196,11 @@ var tmp = function() {
 		var f = new Function("PARAMS", PARAMS.getFileContent(PARAMS.compatPath + "common_350_650_950.js"));
 		PARAMS.langNodeIndex = 4;
 		PARAMS.keyboardNodeIndex = 5;
+		PARAMS.compatibility = {
+			model: "950",
+			langNodeIndex: 4,
+			keyboardNodeIndex: 5
+		};
 		PARAMS.fixTimeZones = fixTimeZones;
 		f(PARAMS);
 	} catch (ee) {

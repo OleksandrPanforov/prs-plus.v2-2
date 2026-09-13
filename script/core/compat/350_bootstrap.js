@@ -54,6 +54,11 @@ var tmp = function() {
 		var f = new Function("PARAMS", PARAMS.getFileContent(PARAMS.compatPath + "common_350_650_950.js"));
 		PARAMS.langNodeIndex = 3;
 		PARAMS.keyboardNodeIndex = 4;
+		PARAMS.compatibility = {
+			model: "350",
+			langNodeIndex: 3,
+			keyboardNodeIndex: 4
+		};
 		f(PARAMS);
 	} catch (ee) {
 		PARAMS.bootLog("error calling common x50 " + ee);
