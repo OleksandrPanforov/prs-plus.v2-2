@@ -5,7 +5,7 @@
 //	2010-03-02 kartu - Added code to delete temporary image files after flashing
 //	2010-03-02 kartu - Added custom copy routine, fixed script copying error
 //	2010-03-02 kartu - Fixed source file copy problem
-//	2010-03-04 kartu - Removed "prsp.sh.russian-sample", "prsp.sh.chinese-sample" from the file list to copy
+//	2010-03-04 kartu - Removed legacy sample files from the copy list
 //	2010-03-04 kartu - Added sync command to flasher
 //	2010-04-27 kartu - Added "system is up to date" screen
 //					    Removed script related code (as there is no "PRS+ script" any more)

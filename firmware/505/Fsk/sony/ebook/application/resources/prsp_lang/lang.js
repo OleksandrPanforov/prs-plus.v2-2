@@ -218,7 +218,7 @@ var initLang505 = function() {
 					title: langL("OPTION_LANG"),
 					icon: "LIST",
 					defaultValue: "en",
-					values: ["ca", "cs", "de", "en", "es", "fr", "ka", "ru", "zh"],
+					values: ["ca", "cs", "de", "en", "es", "fr", "ka", "ua", "zh"],
 					valueTitles: {
 						"ca": "Català",
 						"cs": "Český",
@@ -227,7 +227,6 @@ var initLang505 = function() {
 						"es": "Español",
 						"fr": "Français",
 						"ka": "ქართული",
-						"ru": "Русский",
 						"zh": "简体中文"
 					}
 				},

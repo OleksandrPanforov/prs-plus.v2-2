@@ -57,57 +57,6 @@ tmp = function() {
 				}				
 			}
 		}, 
-		"rus": {
-			bins: [ "#", "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я", "*"],
-			getBinName: function (item) {
-				var ch, code;
-				try {
-					ch = item.charAt(0);
-					code = item.charCodeAt(0);
-					// Ё
-					if (code === 1025 || code === 1105) {
-						return "Ё";
-					}
-					if (code < 1040 ) {
-						return "#";
-					} else if (code > 1103) {
-						return "*";
-					}
-					// toUppercase
-					if (code > 1071) {
-						ch = String.fromCharCode(code - 32);
-					}
-					return rangeBasedGetBinName(this.bins, 1040, 1071, ch);
-				} catch (e) {
-					log.error("in rus.getBinName, item is " + item, e);
-					return "*";
-				}
-			}
-		}, 
-		"lat_rus": {
-			bins: [ "#","AB", "CD", "EF", "GH", "IJ", "KL", "MN", "OP", "QR", "ST", "UV", "WX", "YZ",
-				 "АБ", "ВГ", "ДЕ", "ЁЖ", "ЗИ", "ЙК", "ЛМ", "НО", "ПР", "СТ", "УФ", "ХЦ", "ЧШ", "ЩЪ", "ЫЭ", "ЮЯ", "*"],
-			getBinName: function (item) {
-				var binName;
-				try {
-					// Try Russian first
-					binName = BINS.rus.getBinName(item);
-					if (binName === "*" || binName === "#") {
-						// If not Russian, try latin
-						binName = BINS.lat.getBinName(item);
-					}
-		
-					if (this.map === undefined) {
-						this.map = createCharToBinMapping (this.bins);
-					}
-					
-					return this.map[binName];
-				} catch (e) {
-					log.error("in lat_rus.getBinName, item is " + item, e);
-					return "*";
-				}
-			}
-		}, 
 		"geo": {
 			bins: [ "#", "ა", "ბ", "გ", "დ", "ე", "ვ", "ზ", "თ", "ი", "კ", "ლ", "მ", "ნ", "ო", "პ", "ჟ", "რ", "ს", "ტ", "უ", "ფ", "ქ", "ღ", "ყ", "შ", "ჩ", "ც", "ძ", "წ", "ჭ", "ხ", "ჯ", "ჰ", "*"],
 			getBinName: function (item) {
@@ -182,11 +131,9 @@ tmp = function() {
 				title: L("OPT_ALPHABET"),
 				icon: "ABC",
 				defaultValue: defVal,
-				values: [defVal, "lat", "rus", "lat_rus", "geo", "lat_geo"],
+				values: [defVal, "lat", "geo", "lat_geo"],
 				valueTitles: {
 					"lat": "Latin",
-					"rus": "Русский",
-					"lat_rus": "Англо - русский",
 					"geo": "ქართული",
 					"lat_geo": "ინგლისურ - ქართული"
 				}			

@@ -13,9 +13,10 @@
 //			createMediaNode assumes path is actually media object, if its type is not string
 //
 tmp = function() {
-	var findLibrary, findMedia, loadMedia, createMediaNode, isImage, startsWith;
+	var findLibrary, findMedia, loadMedia, createMediaNode, isImage, startsWith, cachedSource;
 	// Shortcut
 	startsWith = Core.text.startsWith; 
+	cachedSource = null;
 	
 	/**
 	* Finds kinoma "source" (instance of FskCache.source) corresponding to the given full path
@@ -23,11 +24,15 @@ tmp = function() {
 	findLibrary = function (path) {
 		// Find library source responsible for handling the path
 		var i, n, sources, source;
+		if (cachedSource && startsWith(path, cachedSource.path)) {
+			return cachedSource;
+		}
 		source = null;
 		sources = kbook.model.cache.sources;
 		for (i = 0, n = sources.length; i < n; i++) {
 			if (startsWith(path, sources[i].path)) {
 				source = sources[i];
+				cachedSource = source;
 				break;
 			}
 		}
@@ -137,4 +142,3 @@ try {
 } catch (e) {
 	log.error("in core media", e);
 }
-

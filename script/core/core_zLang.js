@@ -7,7 +7,7 @@
 //	2010-04-10 kartu - Fixed collections localization (reported by kravitz)
 //	2010-04-21 kartu - Localized. Fixed invisible "continue" comment bug.
 //	2010-04-22 kartu - Added date customization
-//	2010-04-24 kartu - Added Catalan, Georgian, German, Russian and Spanish locales
+//	2010-04-24 kartu - Added Catalan, Georgian, German and Spanish locales
 //	2010-04-24 kartu - Fixed SS_ON related bug (was set to min instead of max field)
 //	2010-04-24 kartu - Changed language order
 //	2010-04-25 kartu - Marked kbook.model.getDateAndClock as constructor
@@ -83,7 +83,6 @@ tmp = function() {
 					return s[1];
 				};
 				break;
-			case "ru": // fallthrough // Russian
 			case "ua": // Ukrainian
 				var _x_cache = [];
 				var _x_cases = [2, 0, 1, 1, 1, 2];

@@ -22,6 +22,33 @@ var tmp = function() {
 	Core.addons = [];
 	Core.actions = [];
 	Core.addonByName = {};
+	Core.loadedAddons = {};
+	Core.loadAddon = function(path, secondary) {
+		var code, addon, started;
+		if (typeof path !== "string" || path.indexOf("..") !== -1 ||
+				path.indexOf(";") !== -1 || path.indexOf("\0") !== -1) {
+			throw "Invalid lazy addon path";
+		}
+		if (Core.loadedAddons[path]) {
+			return Core.loadedAddons[path];
+		}
+		started = Core.diagnostics && Core.diagnostics.enabled ? new Date().getTime() : 0;
+		code = Core.io.getFileContent(Core.config.corePath + "lazy/" + path, null);
+		if (code === null) {
+			throw "Lazy addon not found: " + path;
+		}
+		addon = new Function("Core,log,tmp", code);
+		addon(Core, log, undefined);
+		Core.loadedAddons[path] = Core.addonByName[path.substring(0, path.lastIndexOf(".js"))];
+		if (!Core.loadedAddons[path]) {
+			throw "Lazy addon did not register: " + path;
+		}
+		if (started) {
+			Core.diagnostics.mark("lazy addon=" + path + " bytes=" + code.length +
+				" duration=" + (new Date().getTime() - started) + "ms");
+		}
+		return Core.loadedAddons[path];
+	};
 
 	// Calls given method for all array objects, passing arg as argument
 	// Arguments:
@@ -37,6 +64,7 @@ var tmp = function() {
 			var obj = objArray[i];
 			var func = obj[methodName];
 			if (typeof func === "function") {
+				var started = Core.diagnostics && Core.diagnostics.enabled ? new Date().getTime() : 0;
 				try {
 					func.apply(obj, args);
 				} catch (e) {
@@ -48,6 +76,11 @@ var tmp = function() {
 						}
 					} catch (ignore) {
 					}
+				}
+				if (started) {
+					Core.diagnostics.mark("addon=" + (obj.name || i) +
+						" hook=" + methodName + " duration=" +
+						(new Date().getTime() - started) + "ms");
 				}
 			}
 		}

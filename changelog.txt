@@ -9,7 +9,6 @@
  * ALL: Fixed Issue #234 "Mah Jong reports "no more moves" when moves are still available"
 
 === 2.0.16 release candidate 2 ===
- * ALL: Minor translation fixes (RUS, TUR)
  * ALL: StandbyImage: Fix for scaling bug in Sony code
  * 300/505/600: Added $a0 (no wrap space) to fonts (to be added to x50 in 2.1.x)
 
@@ -42,7 +41,6 @@
 === 2.0.13v2 beta ===
  * 300/500: Fixed CoverPage as StandbyImage, fixed problem with next page after sleepmode
  * ALL: BrowseFolder patched with Shura1oplots FileSize in Comment & added FileType
- * ALL: Fixed russian localisation of "No Book, 1 Book, x Books"
 
 === 2.0.13 beta ===
  * 505: Fixed #126 "images/audio lists are empty"
@@ -101,10 +99,10 @@
  * x50: Fixed #68 x50: Deleting books opened via Book History is bugged
  * x50: Fixed #66 x50: Collection editing broken, if collection node is not in the 4th slot
  * x50: Periodicals node no longer "unmovable", replaced with "Browse Folders" by default
- * x50: Added Belorussian / Ukranian chars (as popups) to keyboard
+ * x50: Added additional Cyrillic popup characters to keyboard
  * x50: Added rotate by 0 / 90 / 180 / 270 / clock wise / counter clock wize actions
  * 600: Added rotate by 90 action
- * 600: Added Belorussian / Ukranian chars (as popups) to keyboard
+ * 600: Added additional Cyrillic popup characters to keyboard
  * 600: Added #47&48 Spanish (by ?) & Catalan (by Alex Castrillo) localizations
  * 300/505: Added Dictionary (by Clemenseken, lysak, m-land, Mark Nord)
  * 300: Added #57 Spanish localization (by Carlos)
@@ -129,7 +127,6 @@
  * ALL: Fixed "BrowseFolders view not refreshing on settings change, if there is a book open via BrowseFolders"
  * x50: "Fixed Page index in book is not updated when book is opened"
  * ALL: Implemented "goto TOC, doOption, doSearch, doRotate, doMenu, doSize, doRoot actions"
- * x50: Implemented "Russian phonetic keyboard (original keyboard xml by boroda)"
  * x50: Implemented "Latin-English and Latin-Georgian scrollbars"
 
 === 2.0.8 alpha (ported to 650/350) ===
@@ -149,11 +146,9 @@
 
 === 2.0.5 alpha ===
  * 600: BrowseFolders will apear in "more", if not shown on the main page.
- * 300: Fixed sort by title (Russian locale)
 
 === 2.0.4 alpha ===
  * ALL: Updated "about prs+"
- * ALL: Added Russian translation fixes by happyhgy
  * ALL: implemented #16 "88.1% (add decimal) in statusbar"
  * ALL: Fixed #36 (wrong Courier font name)
  * ALL: Fixed #17 "clock is not updated when going from standby"
@@ -214,7 +209,6 @@
    * English
    * French by Duglum & VICTORSJG
    * ქართული by kartu
-   * Русский by SLL
    * Spanish by VICTORSJG & surquizu
  * page per minute / remaining time settings for !PageIndex
  * dictionary by Clemenseken & Lisac (to use it, put your dictionary files int /database/system/PRSPlus/dictionary. Dictionary files MUST have "dic" extension)
@@ -237,7 +231,6 @@
 
 === 1.0.1 ==
 ==== Script ====
- * Added chinese and Russian shell script samples
  * Added VICTORSJG's "menu index"
  * Fixed missing string problem for next/previous song actions. 
  * Fixed NaN problem in epubs page index

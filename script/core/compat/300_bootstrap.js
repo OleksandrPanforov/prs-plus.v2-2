@@ -42,7 +42,7 @@ var tmp = function() {
 			currentLang = kbook.model.language;
 	
 			settingsNode = kbook.root.nodes[6];
-			languages = ["en", "es", "de", "fr", "ka", "it", "nl", "ru", "ua"];
+			languages = ["en", "es", "de", "fr", "ka", "it", "nl", "ua"];
 			langNames = {
 				en: "English",
 				de: "Deutsch", 
@@ -51,7 +51,6 @@ var tmp = function() {
 				it: "Italiano",	
 				ka: "ქართული",
 				nl: "Nederlands", 
-				ru: "Русский",
 				ua: "Українська"
 			};
 	

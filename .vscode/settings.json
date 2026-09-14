@@ -1,5 +1,9 @@
 {
     "chat.tools.terminal.autoApprove": {
-        "rtk": true
+        "rtk": true,
+        "/^rtk python -c \"import py7zr; print\\(py7zr\\.__version__\\)\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
     }
 }

@@ -48,8 +48,8 @@
 
 tmp = function() {
 	var L, LX, log, trim, model, BH_TITLE, BH_SHORT_TITLE, BH_FILE, BookHistory, bookList, mustSave, bookHistoryNode,
-		fromParentFlag, createBookNode, enterBook, constructNodes, loadFromFile,
-		doSave, save, bookChanged, bookDeleted;
+		continueNode, fromParentFlag, createBookNode, enterBook, constructNodes, constructContinueNode, loadFromFile,
+	doSave, save, bookChanged, bookDeleted, exportHistory, text;
 		
 	L = Core.lang.getLocalizer("BookHistory");
 	LX = Core.lang.LX;
@@ -60,6 +60,10 @@ tmp = function() {
 	BH_TITLE = L("TITLE");
 	BH_SHORT_TITLE = L("SHORT_TITLE");
 	BH_FILE = Core.config.settingsPath + "book.history";
+	text = function (key, fallback) {
+		var value = L(key);
+		return value === key ? fallback : value;
+	};
 	
 	// List of history books
 	bookList = [];
@@ -67,16 +71,27 @@ tmp = function() {
 	mustSave = false;
 
 	bookHistoryNode = null;
+	continueNode = null;
 	// Set /unset in gotoNode hook of the book history node
 	fromParentFlag = false;
 	
 	// Creates book node attached to BH node
-	createBookNode = function(path) {
-		var node = Core.media.createMediaNode(path, bookHistoryNode);
+	createBookNode = function(path, parent) {
+		var node = Core.media.createMediaNode(path, parent);
 		if (node !== null) {
 			node.enter = enterBook;
 		}
 		return node;
+	};
+
+	constructContinueNode = function () {
+		this.nodes = [];
+		if (bookList.length > 0) {
+			var node = createBookNode(bookList[0], this);
+			if (node !== null) {
+				this.nodes.push(node);
+			}
+		}
 	};
 	
 	// Takes care of "skip book menu" option
@@ -157,6 +172,45 @@ tmp = function() {
 			Core.io.setFileContent(BH_FILE, current);
 		} catch (e) {
 			log.error("saveToFile(): " + e);
+		}
+	};
+
+	exportHistory = function () {
+		var lines, i, n, path, media, title, author, current;
+		try {
+			lines = ["PRS+ Reading History", "====================", ""];
+			for (i = 0, n = bookList.length; i < n; i++) {
+				path = bookList[i];
+				title = path;
+				author = "";
+				try {
+					media = Core.media.findMedia(path);
+					if (media) {
+						title = media.title || path;
+						author = media.author || "";
+					}
+				} catch (ignore) {
+				}
+				lines.push((i + 1) + ". " + title);
+				if (author !== "") {
+					lines.push("   Author: " + author);
+				}
+				lines.push("   Path: " + path);
+				lines.push("");
+			}
+			current = kbook.model.currentBook;
+			if (current && current.media) {
+				lines.push("Current book: " +
+					(current.media.title || current.media.path || "unknown"));
+				if (kbook.model.currentPage !== undefined) {
+					lines.push("Current page: " + kbook.model.currentPage);
+				}
+			}
+			Core.io.setFileContent(Core.config.historyExportPath, lines.join("\r\n"));
+			Core.ui.showMsg(text("EXPORT_COMPLETE", "Reading history exported"), 2);
+		} catch (e) {
+			log.error("exportHistory", e);
+			Core.ui.showMsg(text("EXPORT_FAILED", "Unable to export reading history"), 2);
 		}
 	};
 	
@@ -298,6 +352,22 @@ tmp = function() {
 			}
 			return bookHistoryNode;
 		},
+
+		getContinueNode: function() {
+			if (continueNode === null) {
+				continueNode = Core.ui.createContainerNode({
+					title: L("CONTINUE_READING"),
+					shortName: L("CONTINUE_READING"),
+					icon: "CONTINUE",
+					comment: function () {
+						return bookList.length > 0 ? LX("BOOKS", 1) : LX("BOOKS", 0);
+					},
+					construct: constructContinueNode
+				});
+				continueNode.nodes = null;
+			}
+			return continueNode;
+		},
 			
 		// Make bookList var available to other addons
 		getBookList: function () {
@@ -349,6 +419,25 @@ tmp = function() {
 					log.trace("can't find current node");
 				}
 			}
+		}, {
+			name: "ContinueDashboard",
+			title: L("ACTION_CONTINUE_READING"),
+			group: "Book",
+			icon: "CONTINUE",
+			action: function () {
+				var current = Core.ui.getCurrentNode();
+				var node = BookHistory.getContinueNode();
+				if (current && node) {
+					node.nodes = null;
+					current.gotoNode(node, model);
+				}
+			}
+		}, {
+			name: "ExportReadingHistory",
+			title: text("EXPORT_HISTORY", "Export reading history"),
+			group: "Utils",
+			icon: "LIST",
+			action: exportHistory
 		}]
 		
 	};

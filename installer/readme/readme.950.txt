@@ -1,12 +1,16 @@
-Installation:
+PRS+ installation for Sony PRS-950
 
-Warning: MAKE SURE YOUR READER IS AT LEAST 75% CHARGED before starting installation!!!
+Warning: make sure your reader is at least 75% charged before starting.
 
-1) Connect your reader to the PC
-2) Double-click the setup.exe on the PC. The program will give you all necessary instructions on your PC screen.
+1) Connect the reader to your computer.
+2) Copy the complete `PRSPInstaller` folder from this archive to the root of
+   the reader's internal storage.
+3) Safely eject the reader and restart it.
+4) The installer runs automatically during startup. There is no PC installer
+   window.
+5) Wait for the reader to finish restarting before disconnecting power or
+   removing files.
 
-
-Linux / MacOS users
-
-You will need Windows for the first installation. 
-Subsequent updates could be installed by simply unpacking update.zip to internal memory and rebooting the reader.
+The installer replaces the existing PRS+ files. Installation details are
+written to `Data/PRSPInstaller/install.log`; the installer removes its own
+folder when it completes.

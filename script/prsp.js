@@ -11,6 +11,7 @@
 if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 	var bootLog;
 	var path, code, f, endsWith, isSafePath, listFiles, getFileContent, getFileContentEx, userConfig, Core, loadCore, loadAddons, compatPath;
+	var diagnosticStart, diagnosticLast, diagnosticMark, diagnosticRefreshes;
 	var tmp = function() {
 		var config = {
 			model: System.applyEnvironment("[prspModel]"),
@@ -20,6 +21,7 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 			addonsPath: System.applyEnvironment("[prspAddonsPath]"),
 			settingsPath: System.applyEnvironment("[prspSettingsPath]"),
 			publicPath: System.applyEnvironment("[prspPublicPath]"), 
+			historyExportPath: System.applyEnvironment("[prspPublicPath]") + "reading-history.txt",
 			userCSSPath: System.applyEnvironment("[prspUserCSSPath]"),
 			userDictionaryPath: System.applyEnvironment("[userDictionaryPath]"),
 			userGamesSavePath: System.applyEnvironment("[prspPublicPath]")+"GamesSave/",  
@@ -146,28 +148,71 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 
 		Core = {config: config};
 
+		diagnosticStart = new Date().getTime();
+		diagnosticLast = diagnosticStart;
+		diagnosticRefreshes = {};
+		diagnosticMark = function(name) {
+			var now, elapsed, sinceLast;
+			if (!config.startupDiagnostics) {
+				return;
+			}
+			now = new Date().getTime();
+			elapsed = now - diagnosticStart;
+			sinceLast = now - diagnosticLast;
+			diagnosticLast = now;
+			bootLog("[startup] " + name + " total=" + elapsed +
+				"ms phase=" + sinceLast + "ms");
+		};
+		Core.diagnostics = {
+			enabled: !!config.startupDiagnostics,
+			startTime: diagnosticStart,
+			mark: diagnosticMark,
+			recordRefresh: function(category, duration, region) {
+				var key, entry, suffix;
+				if (!config.startupDiagnostics) {
+					return;
+				}
+				key = category || "unspecified";
+				entry = diagnosticRefreshes[key];
+				if (!entry) {
+					entry = diagnosticRefreshes[key] = {count: 0, total: 0};
+				}
+				entry.count++;
+				entry.total += duration;
+				suffix = region ? " region=" + region : "";
+				bootLog("[refresh] category=" + key + " count=" + entry.count +
+					" duration=" + duration + "ms total=" + entry.total + "ms" + suffix);
+			}
+		};
+		diagnosticMark("config loaded");
+
 		// Init function, called by model specific bootstrap 
 		loadCore = function() {
+			diagnosticMark("core load started");
 			try {
 				// Call core (there seems to be 100k limitation on javascript size, that's why it's split from addons)
 				var coreCode, core;
 				coreCode = getFileContentEx(config.coreFile, ".js");
+				diagnosticMark("core source bytes=" + coreCode.length);
 				core = new Function("Core", coreCode);
 				core(Core);
 			} catch (e) {
 				bootLog("Failed to load core "  + e);
 				bootLog("core file was " + config.coreFile);
 			}
+			diagnosticMark("core load finished");
 		};
 		
 		// Load addons, called by model specific bootstrap
 		loadAddons = function() {
 			var addonCode, log, addons, addonsPath, addonsPath1, jsPostfix;
+			diagnosticMark("addons load started");
 			jsPostfix = ".js";
 			addonsPath = config.addonsFile;
 			// Call addons
 			try {
 				addonCode = getFileContentEx(addonsPath, jsPostfix);
+				diagnosticMark("addons source bytes=" + addonCode.length);
 				log = Core.log.getLogger("addons");
 				addons = new Function("Core,log,tmp", addonCode);
 				addons(Core, log, undefined);
@@ -183,11 +228,13 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 					addonsPath1 = addonsPath.substring(0, addonsPath.lastIndexOf("/")) + "1/";
 				}
 				addonCode = getFileContentEx(addonsPath1, ".js");
+				diagnosticMark("addons1 source bytes=" + addonCode.length);
 				addons = new Function("Core,log,tmp", addonCode);
 				addons(Core, log, undefined);
 			} catch (e) {
 				bootLog("Failed to load addons1 " + e);
 			}
+			diagnosticMark("addons load finished");
 		};
 
 		compatPath = Core.config.corePath + "compat/";
@@ -204,6 +251,7 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 		
 		// Call model specific bootstrap
 		try {
+			diagnosticMark("compatibility bootstrap started");
 			path = compatPath +  Core.config.model + "_bootstrap.js";
 			code = getFileContent(path);
 			f = new Function("PARAMS", code);
@@ -214,11 +262,13 @@ if (!FileSystem.getFileInfo(System.applyEnvironment("[prspSafeModeFile]"))) {
 				loadCore: loadCore, 
 				loadAddons: loadAddons, 
 				getFileContent: getFileContent, 
+				getFileContentEx: getFileContentEx,
 				compatPath: compatPath
 			});
 		} catch (e1) {
 			bootLog("FATAL: failed to call bootstrap " + e1); 
 		}
+		diagnosticMark("bootstrap finished");
 	};
 	try {
 		tmp();

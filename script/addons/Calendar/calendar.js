@@ -540,10 +540,6 @@ var tmp = function () {
 			this.loadKeyboard(kbdPath+"western.kbd");			
 			target.EVENTS_DIALOG.kbdSelect.setValue("Western");
 			currentKbd=1;
-		}  else if (target.settings.CurrentKeyboard=="Russian") {
-			this.loadKeyboard(kbdPath+"russian.kbd");			
-			target.EVENTS_DIALOG.kbdSelect.setValue("Russian");
-			currentKbd=2;
 		}  else if (target.settings.CurrentKeyboard=="Georgian") {
 			this.loadKeyboard(kbdPath+"georgian.kbd");			
 			target.EVENTS_DIALOG.kbdSelect.setValue("Georgian");
@@ -1810,11 +1806,7 @@ var tmp = function () {
 					target.loadKeyboard(kbdPath+"western.kbd");			
 					target.EVENTS_DIALOG.kbdSelect.setValue("Western");
 					target.settings.CurrentKeyboard="Western";
-				}  else if (currentKbd==2) {
-					target.loadKeyboard(kbdPath+"russian.kbd");			
-					target.EVENTS_DIALOG.kbdSelect.setValue("Russian");
-					target.settings.CurrentKeyboard="Russian";
-				}  else if (currentKbd==3) {
+				} else if (currentKbd==3) {
 					target.loadKeyboard(kbdPath+"georgian.kbd");			
 					target.EVENTS_DIALOG.kbdSelect.setValue("Georgian");
 					target.settings.CurrentKeyboard="Georgian";

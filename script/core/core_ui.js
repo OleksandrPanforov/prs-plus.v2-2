@@ -118,8 +118,16 @@ try {
 
 	// Forces screen update
 	//
-	Core.ui.updateScreen = function () {
-		FskUI.Window.update.call(kbook.model.container.getWindow());
+	Core.ui.updateScreen = function (category, region) {
+		var started, window;
+		if (Core.diagnostics && Core.diagnostics.enabled) {
+			started = new Date().getTime();
+		}
+		window = kbook.model.container.getWindow();
+		FskUI.Window.update.call(window);
+		if (started) {
+			Core.diagnostics.recordRefresh(category, new Date().getTime() - started, region);
+		}
 	};
 
 	// Shows "msgs" for given amount of time

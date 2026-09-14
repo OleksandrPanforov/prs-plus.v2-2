@@ -12,7 +12,7 @@
 //
 // History:
 //	2011-02-26 kartu - Initial version, merged from 350/950 code
-//		Added Belorussian / Ukranian chars (as popups) to keyboard
+//		Added additional Cyrillic popup characters to keyboard
 //		Fixed #66 x50: Collection editing broken, if collection node is not in the 4th slot
 //	2011-02-27 kartu - Refactored parameters into PARAMS object
 //	2011-03-16 kartu - Added Georgian translation for 350/650 by rawerfas & kato
@@ -264,7 +264,7 @@ tmp = function () {
 			// Fix settings node 
 			settingsNode.multiPage = true;
 			
-			languages = ["ca", "de", "en", "es", "fr", "it", "nl", "pl", "pt", "ru"];
+			languages = ["ca", "de", "en", "es", "fr", "it", "nl", "pl", "pt", "ua"];
 			langNames = {
 				ca: "Català",
 				de: "Deutsch", 
@@ -276,7 +276,7 @@ tmp = function () {
 				nl: "Nederlands",
 				pl: "Polski",
 				pt: "Português",
-				ru: "Русский"
+				ua: "Українська"
 			};
 			
 			// Load core js		
@@ -434,10 +434,9 @@ tmp = function () {
 				"Sapanish-Spain", 
 				"Italian-Italy",
 				"Polish",
-				"Portuguese-Portugal",				
-				"Georgian", 
-				"Russian",
-				"Russian-Phonetic"
+				"Portuguese-Portugal",
+				"Georgian",
+				"Ukrainian"
 		];
 		keyboardNames = {
 			"German-Germany": "Deutsch",
@@ -446,11 +445,10 @@ tmp = function () {
 			"French-Canada": "Français canadien",
 			"Italian-Italy": "Italiano",
 			"Georgian": "ქართული",
+			"Ukrainian": "Українська",
 			"Dutch-Netherlands": "Nederlands",
 			"Polish": "Polski",
-			"Portuguese-Portugal": "Português",				
-			"Russian": "Русская",
-			"Russian-Phonetic": "Русская (яверты)",
+			"Portuguese-Portugal": "Português",
 			"English-UK": "United Kingdom",
 			"English-US": "United States"
 		};
@@ -509,9 +507,8 @@ tmp = function () {
 		"Italian-Italy": "KeyboardLayout142.xml",
 		"Polish": "languages/KeyboardLayoutPolish.xml",
 		"Portuguese-Portugal": "KeyboardLayout275.xml",
-		"Russian": "languages/KeyboardLayoutRussian.xml",
-		"Russian-Phonetic": "languages/KeyboardLayoutRussianPhonetic.xml",
-		"Georgian": "languages/KeyboardLayoutGeorgian.xml"
+		"Georgian": "languages/KeyboardLayoutGeorgian.xml",
+		"Ukrainian": "languages/KeyboardLayoutUkrainian.xml"
 	};
 
 	oldChangeKeyboardType = Fskin.kbookKeyboard.keyboardLayout.changeKeyboardType;

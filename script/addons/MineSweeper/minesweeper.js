@@ -460,7 +460,7 @@ var tmp = function () {
 	};
 
 	var updateScreen = function() {
-		FskUI.Window.update.call(kbook.model.container.getWindow());
+		Core.ui.updateScreen("MineSweeper");
 	};
 
 	// just for debugging purposes

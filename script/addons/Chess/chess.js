@@ -424,7 +424,7 @@ var tmp = function () {
 				}
 	
 				if (automode) {
-					FskUI.Window.update.call(kbook.model.container.getWindow());
+					Core.ui.updateScreen("Chess");
 					oldlevel=level;
 					// Save board in case AI fails
 					for (y = 0; y < 110; y++) {
@@ -1637,7 +1637,7 @@ var tmp = function () {
 				// black needs to do an automove if game not over and in automode
 				if ((bGameNotOver) && (automode) && (etc.bBlackSide)) {
 					oldlevel=level;
-					FskUI.Window.update.call(kbook.model.container.getWindow());
+					Core.ui.updateScreen("Chess");
 					// Save board in case AI fails
 					for (y = 0; y < 110; y++) {
 						tempBoard[y] = etc.aBoard[y];

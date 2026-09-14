@@ -246,7 +246,8 @@ tmp = function() {
 	Core.settings = {};
 
 	Core.settings.init = function(addons) {
-		var i, n;
+		var i, n, started;
+		started = Core.diagnostics && Core.diagnostics.enabled ? new Date().getTime() : 0;
 		// Init settings groups
 		Core.settings.settingsGroupDefs = {
 			menu: {
@@ -265,6 +266,10 @@ tmp = function() {
 		// Create addon nodes and addon option nodes
 		for (i = 0, n = addons.length; i < n; i++) {
 			Core.settings.createAddonSettings(addons[i]);
+		}
+		if (started) {
+			Core.diagnostics.mark("settings nodes addons=" + n + " duration=" +
+				(new Date().getTime() - started) + "ms");
 		}
 	};
 
@@ -422,7 +427,8 @@ tmp = function() {
 	// Loads addon's options, using default option values, if settings file or value is not present.
 	//
 	Core.settings.loadOptions = function(addon) {
-		var options, settingsFile, optionDefs, i, od;
+		var options, settingsFile, optionDefs, i, od, started;
+		started = Core.diagnostics && Core.diagnostics.enabled ? new Date().getTime() : 0;
 		try {
 			if (addon.optionDefs) {
 				// load settings from settings file
@@ -462,6 +468,10 @@ tmp = function() {
 			}
 		} catch (e) {
 			log.error("Loading settings of " + addon.name);
+		}
+		if (started) {
+			Core.diagnostics.mark("addon=" + addon.name + " settings duration=" +
+				(new Date().getTime() - started) + "ms");
 		}
 	};
 	

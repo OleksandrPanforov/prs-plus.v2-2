@@ -37,6 +37,7 @@ History:
 	<property name="FLASHABLE_505" value="true" />
 	<patternset id="addons_300_505">
 		<include name="**/*" />
+		<exclude name="LazyGames.js" />
 		<exclude name="ScrollbarAlphabet.js" />
 		<exclude name="StandardActions_x50.js" />
 		<exclude name="ViewerSettings_x50.js" />
@@ -46,6 +47,7 @@ History:
 	</patternset>
 	<patternset id="addons_600_x50">
 		<include name="**/*" />
+		<exclude name="LazyGames.js" />
 		<exclude name="MediaTag.js" />
 		<exclude name="MenuCaptions.js" />
 		<exclude name="DictionaryCL" />
@@ -75,11 +77,31 @@ History:
 	<patternset id="addons_650">
 		<patternset refid="addons_600_x50" />
 		<exclude name="ViewerSettings_600.js" />
+		<exclude name="Chess.js" />
+		<exclude name="Draughts.js" />
+		<exclude name="FiveBalls.js" />
+		<exclude name="FiveRow.js" />
+		<exclude name="FreeCell.js" />
+		<exclude name="Mahjong.js" />
+		<exclude name="MineSweeper.js" />
+		<exclude name="Solitaire.js" />
+		<exclude name="Sudoku.js" />
+		<exclude name="XOCubed.js" />
 	</patternset>
+	<patternset id="addons1_650">
+		<patternset refid="addons_600_x50" />
+		<exclude name="Sudoku.js" />
+		<exclude name="XOCubed.js" />
+	</patternset>
+	<patternset id="addons1_300"><patternset refid="addons_300" /></patternset>
+	<patternset id="addons1_350"><patternset refid="addons_350" /></patternset>
+	<patternset id="addons1_505"><patternset refid="addons_505" /></patternset>
+	<patternset id="addons1_600"><patternset refid="addons_600" /></patternset>
 	<patternset id="addons_950">
 		<patternset refid="addons_600_x50" />
 		<exclude name="ViewerSettings_600.js" />
 	</patternset>
+	<patternset id="addons1_950"><patternset refid="addons_950" /></patternset>
 	
 	<!--======================================================================== 
 		Init tools
@@ -150,6 +172,12 @@ History:
 						<include name="data/**/*"/>
 					</fileset>
 				</copy>
+				<if>
+					<equals arg1="${model}" arg2="650" />
+					<then>
+						<copy file="../installer/update-runonce.650.sh" tofile="dist/${model}/runonce.sh" />
+					</then>
+				</if>
 			</else>
 		</if>
 		
@@ -245,7 +273,7 @@ History:
 		</copy>
 		<copy todir="${beta}/addons1">
 			<fileset dir="${src}/addons1" >
-			 	<patternset refid="addons_${model}" />
+				<patternset refid="addons1_${model}" />
 			</fileset>
 		</copy>
 		
@@ -311,7 +339,7 @@ History:
 		<concat destfile="${prsp.dir}/addons1.js" encoding="UTF-8">
 			<intersect>
 				<fileset dir="${SRC.ADDONS}1">
-					<patternset refid="addons_${model}" />
+					<patternset refid="addons1_${model}" />
 				</fileset>
 				<fileset dir="${SRC.ADDONS}1">
 					<include name="*.js"/>
@@ -337,6 +365,29 @@ History:
 				<include name="lang/*" />
 			</fileset>
 		</copy>
+		<if>
+			<equals arg1="${model}" arg2="650" />
+			<then>
+				<copy todir="${prsp.dir}/lazy">
+					<fileset dir="${SRC.ADDONS}">
+						<include name="Chess.js" />
+						<include name="Draughts.js" />
+						<include name="FiveBalls.js" />
+						<include name="FiveRow.js" />
+						<include name="FreeCell.js" />
+						<include name="Mahjong.js" />
+						<include name="MineSweeper.js" />
+						<include name="Solitaire.js" />
+						<include name="Sudoku.js" />
+						<include name="XOCubed.js" />
+					</fileset>
+					<fileset dir="${SRC.ADDONS}1">
+						<include name="Sudoku.js" />
+						<include name="XOCubed.js" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
 		
 		<echo>Creating version info file</echo>
 		<echo file="${prsp.dir}/prspfw.ver">${PRSP_VER}</echo>
