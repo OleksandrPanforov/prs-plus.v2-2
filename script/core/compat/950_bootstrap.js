@@ -8,7 +8,6 @@
 //	2011-01-12 kartu - Initial version, based on 600
 //	2011-02-06 kartu - Fixed #64 "Wrong german translation file"
 //	2011-02-07 kartu - Implemented # possibility to download files using web browser
-//	2011-02-10 kartu - Implemented # Russian phonetic keyboard (keyboard xml by boroda)
 //	2011-02-26 kartu - Refactored, moved code common to x50 models into common_x50.js
 //	2011-02-27 kartu - Refactored parameters into PARAMS object
 //	2011-05-12 kartu - Added "GMT + 10" timezone

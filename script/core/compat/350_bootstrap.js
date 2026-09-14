@@ -11,7 +11,6 @@
 //	2011-02-07 kartu - Implemented #? possibility to download files using web browser
 //	2011-02-08 kartu - Deleted irrelevant "fixTimeZones" code
 //	2011-02-09 kartu - Fixed # Text Memo open => press root leads to reboot
-//	2011-02-10 kartu - Implemented # Russian phonetic keyboard (keyboard xml by boroda)
 //	2011-02-26 kartu - Refactored, moved code common to x50 models into common_x50.js
 //	2011-02-27 kartu - Refactored parameters into PARAMS object
 //	2011-07-04 Mark Nord - Added #24 "Displaying first page of the book on standby" based on code found by Ben Chenoweth

@@ -35,7 +35,6 @@ try {
 			"     German: Duglum, klawong, Mark Nord\n" +			
 			"     Italian: Samhain, Salvatore Ingala\n" +
 			"     Portuguese: Olympio Neto\n" +
-			"     Russian: SLL, boroda, amutin, happyhgy\n" +
 			"     Simplified Chinese: thawk, frank0734\n" +
 			"     Spanish: surquizu, VICTORSJG, Carlos\n" +
 			"     Turkish: Ugur Bulgan, Abdullah Demirci \n" +

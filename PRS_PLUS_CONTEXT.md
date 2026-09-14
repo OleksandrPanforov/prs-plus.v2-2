@@ -89,7 +89,7 @@ The project adds a large number of enhancements over the stock firmware. Based o
 - Games and add-ons:
   - Chess, Mahjong, FreeCell, MineSweeper, Draughts, Sudoku, XO-Cubed, Solitaire, and others.
 - Localization:
-  - many translations (English, German, French, Russian, Spanish, Catalan, Czech, Turkish, etc.).
+  - many translations (English, German, French, Spanish, Catalan, Czech, Turkish, etc.).
 
 ## Installation flow
 

@@ -1,5 +1,5 @@
 // Name: Non-Unicode text encoding
-// Description: Allows to choose between Latin / win1251 (Russian) encodings
+// Description: Allows to choose between Latin and extended encodings
 // Author: kartu
 //
 // History:
@@ -28,10 +28,9 @@ tmp = function () {
 					title: L("OPTION_TITLE"),
 					icon: "BOOK",
 					defaultValue: "___latin___",
-					values:	["___latin___", "___win1251___"],
+					values:	["___latin___"],
 					valueTitles: {
-						___latin___: L("LATIN"),
-						___win1251___: L("RUSSIAN")
+						___latin___: L("LATIN")
 					}
 				}
 			];

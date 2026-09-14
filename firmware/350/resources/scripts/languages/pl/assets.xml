@@ -193,7 +193,6 @@
 		<string id="STR_UI_LANG_EN" value="English" />
 		<string id="STR_UI_LANG_FR" value="Polski" />
 		<string id="STR_UI_LANG_DE" value="Deutsch" />
-		<string id="STR_UI_LANG_NL" value="Русский" />
 		<string id="STR_UI_MESSAGE_GUIDEAREA_LANG" value="Wybierz język i wciśnij OK.&#xA;Uwaga: Ustawienia urządzenia mogą być zmienione poźniej." />
 		<string id="STR_UI_PARTS_DELIMITER" value="/" />
 		<string id="STR_UI_MESSAGE_DEMOMODE" value="(Tryb Demo)" />

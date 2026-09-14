@@ -172,6 +172,12 @@ History:
 						<include name="data/**/*"/>
 					</fileset>
 				</copy>
+				<if>
+					<equals arg1="${model}" arg2="650" />
+					<then>
+						<copy file="../installer/update-runonce.650.sh" tofile="dist/${model}/runonce.sh" />
+					</then>
+				</if>
 			</else>
 		</if>
 		

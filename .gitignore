@@ -1,0 +1,5 @@
+syntax:glob
+build/dist/*
+build/tmp/*
+core/lang/*.js
+build/prsp.properties

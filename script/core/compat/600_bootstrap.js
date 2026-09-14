@@ -14,7 +14,7 @@
 //	2010-12-01 kartu - Fixed #28 "Stand-by image should be independent of screen orientation" 
 //			(added landscape subfolder support, as there is no way to rotate the image
 //	2011-02-06 kartu - Fixed #64 "Wrong german translation file"
-//	2011-02-27 kartu - Added Belorussian / Ukranian chars (as popups) to keyboard
+//	2011-02-27 kartu - Added additional Cyrillic popup characters for keyboard support
 //	2011-02-27 kartu - Refactored parameters into PARAMS object
 //	2011-03-02 kartu - Added #47&48 Spanish (by ?)  & Catalan (by Alex Castrillo) localizations
 //	2011-03-19 kartu - Fixed keyboard: "aaaa" is shown instead of ascented (popup) letters
@@ -48,7 +48,7 @@ var tmp = function() {
 				node, langFile;
 			currentLang = kbook.model.language;
 			settingsNode = kbook.root.nodes[6].nodes[2];
-			languages = ["ca", "cs", "en", "es", "de", "fr", "it", "nl", "ka", "pt", "ru", "tr", "zh"];
+			languages = ["ca", "cs", "en", "es", "de", "fr", "it", "nl", "ka", "pt", "tr", "ua", "zh"];
 			langNames = {
 				ca: "Català",
 				cs: "Český",
@@ -60,8 +60,8 @@ var tmp = function() {
 				ka: "ქართული",
 				nl: "Nederlands",
 				pt: "Português",
-				ru: "Русский",
 				tr: "Türkçe",
+				ua: "Українська",
 				zh: "简体中文 (Simplified Chinese)"
 			};
 	
@@ -153,9 +153,9 @@ var tmp = function() {
 				"Czech",
 				"French-France",
 				"German-Germany", 
-				"Georgian", 
-				"Dutch-Netherlands", 
-				"Russian",
+				"Georgian",
+				"Ukrainian",
+				"Dutch-Netherlands",
 				"English-UK", 
 				"English-US" 
 		];
@@ -164,8 +164,8 @@ var tmp = function() {
 			"French-France": "Français",
 			"German-Germany": "Deutsch",
 			"Georgian": "ქართული",
+			"Ukrainian": "Українська",
 			"Dutch-Netherlands": "Nederlands",
-			"Russian": "Русская",
 			"English-UK": "United Kingdom",
 			"English-US": "United States"
 		};
@@ -221,8 +221,8 @@ var tmp = function() {
 				"French-France": "KeyboardLayout189.xml",
 				"German-Germany": "KeyboardLayout129.xml",
 				"Dutch-Netherlands": "KeyboardLayout143.xml",
-				"Russian": "languages/KeyboardLayoutRussian.xml",
 				"Georgian": "languages/KeyboardLayoutGeorgian.xml",
+				"Ukrainian": "languages/KeyboardLayoutUkrainian.xml",
 				"Czech": "languages/KeyboardLayoutCzech.xml"
 			};
 			path = System.applyEnvironment('[keyboardLayoutPath]') ;

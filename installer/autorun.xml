@@ -303,10 +303,6 @@ History:
 		<kbookLabel skin="piRowNum" bottom="140" right="0" width="35" height="70" align="center" text="8" />
 		<kbookLabel skin="piRow" bottom="140" right="0" left="50" height="70" text="French" />
 
-		<panel skin="piMenuRowBorderless" left="0" bottom="70" right="0" height="70" />
-		<kbookLabel skin="piRowNum" bottom="70" right="0" width="35" height="70" align="center" text="9" />
-		<kbookLabel skin="piRow" bottom="70" right="0" left="50" height="70" text="Русский" />
-
 		<panel skin="piMenuRow" left="0" bottom="0" right="0" height="70" />
 		<kbookLabel skin="piRowNum" bottom="0" right="0" width="35" height="70" align="center" text="0" />
 		<kbookLabel skin="piRow" bottom="0" right="0" left="50" height="70" text="Exit" />
@@ -333,9 +329,6 @@ History:
 					} else if (part.key == "8") {
 						// French
 						strings = target.loadScript(target.path + "languages/French.js");
-					} else if (part.key == "9") {
-						// Russian
-						strings = target.loadScript(target.path + "languages/Russian.js");
 					} else if (part.key == "0") {
 						kbook.model.container.endFullScreen();
 						kbook.autoRunRoot.exitIf(kbook.model);						
